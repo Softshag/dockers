@@ -1,0 +1,104 @@
+#/bin/sh
+
+set -e
+
+GITBIN=`which git`
+NPM=`which npm`
+NODE=`which node`
+
+if [ -z "$WORKSPACE" ]; then
+  WORKSPACE=$PWD
+fi
+
+RUN_LOG="$WORKSPACE/run.log"
+if [ -f "$WORKSPACE/.apprc" ]; then
+  . $WORKSPACE/.apprc
+fi
+
+if [ -z "$PROJECT_DIR" ]; then
+ PROJECT_DIR="$WORKSPACE"
+fi
+
+update_source () {
+
+  if [ ! -z "$GIT_REPO_KEY" ] && [ -n "$GIT_REPO_KEY" ]; then
+    echo "Setting git admin" | tee -a $RUN_LOG
+    git config --global alias.admin \!"/usr/bin/git-as.sh $GIT_REPO_KEY"
+  fi
+
+  if [ ! -d "$PROJECT_DIR/.git" ]; then
+    echo "# Cloning source: $GIT_REPO" | tee -a $RUN_LOG
+    $GITBIN clone $GIT_REPO $PROJECT_DIR >> $RUN_LOG 2>&1
+
+    if [ -z "$GIT_REPO_BRANCH" ]; then
+      echo "# Changing branch: $GIT_REPO_BRANCH" >> $RUN_LOG
+      cd $PROJECT_DIR
+      git checkout $GIT_REPO_BRANCH >> $RUN_LOG 2>&1
+    fi
+
+  else
+    echo "# Updating source: $GIT_REPO" | tee -a $RUN_LOG
+    cd $PROJECT_DIR
+    $GITBIN pull >/dev/null >> $RUN_LOG 2>&1
+  fi
+
+
+}
+
+run_npm () {
+
+  cd $PROJECT_DIR
+  if [ "clean" == "$1" ]; then
+    echo "# Cleaning" | tee -a $RUN_LOG
+    rm -rf node_modules
+  fi
+  echo "# Intalling dependencies" | tee -a $RUN_LOG
+  $NPM install --production >> $RUN_LOG 2>&1
+}
+
+
+bootstrap_app () {
+  cd $PROJECT_DIR
+  if [ -z "$BINARY" ]; then
+    BINARY="$NPM start"
+  fi
+  echo "# Running application: $BINARY" | tee -a $RUN_LOG
+  $BINARY
+}
+
+print_env () {
+  cat > $RUN_LOG <<EOL
+# Environment
+WORKSPACE=${WORKSPACE}
+PROJECT_DIR=${PROJECT_DIR}
+# Binaries
+GITBIN=${GITBIN}
+NODE=${NODE}
+NPM=${NPM}
+
+EOL
+
+  if [ ! -z "$GIT_REPO" ]; then
+    echo "# Github" >> $RUN_LOG
+    echo "GIT_REPO=$GIT_REPO" >> $RUN_LOG
+  fi
+
+  if [ ! -z "$GIT_REPO_BRANCH" ]; then
+    echo "GIT_REPO_BRANCH=$GIT_REPO_BRANCH" >> $RUN_LOG
+  fi
+
+  #if [ ! -z "$GIT_REPO_KEY" ]; then
+  #  echo "GIT_REPO_KEY=$GIT_REPO_KEY" >> $RUN_LOG
+  #fi
+}
+
+print_env
+
+if [ ! -z "$GIT_REPO" ]; then
+  update_source
+  run_npm "clean"
+else
+  run_npm
+fi
+
+bootstrap_app
