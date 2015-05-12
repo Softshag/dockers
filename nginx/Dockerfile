@@ -6,11 +6,13 @@ RUN curl -L https://github.com/kelseyhightower/confd/releases/download/v0.9.0/co
     chmod a+x /usr/bin/confd && \
     mkdir -p /etc/confd/{conf.d,templates}
 
+RUN rm /etc/nginx/conf.d/default.conf
 
 VOLUME ["/etc/confd"]
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 
 RUN chmod a+x /usr/bin/entrypoint.sh
+
 
 CMD ["/usr/bin/entrypoint.sh"]
