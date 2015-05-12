@@ -10,7 +10,7 @@ set -e
 
 if [ "$1" = "run" ]; then
   shift
-  start_app $@
+  run_app $@
 else
   exec "$@"
 fi

@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 set -e
 
@@ -28,18 +28,18 @@ update_source () {
 
   if [ ! -d "$PROJECT_DIR/.git" ]; then
     echo "# Cloning source: $GIT_REPO" | tee -a $RUN_LOG
-    $GITBIN clone $GIT_REPO $PROJECT_DIR >> $RUN_LOG 2>&1
+    $GITBIN clone $GIT_REPO $PROJECT_DIR >> $RUN_LOG
 
     if [ -z "$GIT_REPO_BRANCH" ]; then
       echo "# Changing branch: $GIT_REPO_BRANCH" >> $RUN_LOG
       cd $PROJECT_DIR
-      git checkout $GIT_REPO_BRANCH >> $RUN_LOG 2>&1
+      git checkout $GIT_REPO_BRANCH >> $RUN_LOG
     fi
 
   else
     echo "# Updating source: $GIT_REPO" | tee -a $RUN_LOG
     cd $PROJECT_DIR
-    $GITBIN pull >/dev/null >> $RUN_LOG 2>&1
+    $GITBIN pull >/dev/null >> $RUN_LOG
   fi
 
 
@@ -48,12 +48,12 @@ update_source () {
 run_npm () {
 
   cd $PROJECT_DIR
-  if [ "clean" == "$1" ]; then
+  if [ "clean" = "$1" ]; then
     echo "# Cleaning" | tee -a $RUN_LOG
     rm -rf node_modules
   fi
   echo "# Intalling dependencies" | tee -a $RUN_LOG
-  $NPM install --production >> $RUN_LOG 2>&1
+  $NPM install --production >> $RUN_LOG
 }
 
 
@@ -96,7 +96,7 @@ print_env
 
 if [ ! -z "$GIT_REPO" ]; then
   update_source
-  run_npm "clean"
+  run_npm
 else
   run_npm
 fi
