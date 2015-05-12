@@ -25,11 +25,13 @@ EnvironmentFile=/etc/environment
 ExecStartPre=-/usr/bin/docker kill nginx
 ExecStartPre=-/usr/bin/docker rm nginx
 ExecStartPre=/usr/bin/docker pull softshag/nginx
-ExecStart=/usr/bin/docker run --name nginx -p ${COREOS_PUBLIC_IPV4}:80:80 \
-softshag/nginx
+ExecStart=/usr/bin/docker run --name nginx -p 80:80 softshag/nginx
 
 # Stop
 ExecStop=/usr/bin/docker stop nginx
 
 [X-Fleet]
-Conflicts=nginx-lb.service
+Conflicts=nginx.service
+
+[Install]
+WantedBy=multi-user.target

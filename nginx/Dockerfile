@@ -1,6 +1,6 @@
 FROM nginx:1.9
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y git-core curl
 
 RUN curl -L https://github.com/kelseyhightower/confd/releases/download/v0.9.0/confd-0.9.0-linux-amd64 -o /usr/bin/confd && \
     chmod a+x /usr/bin/confd && \
