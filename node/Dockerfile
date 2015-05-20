@@ -8,8 +8,6 @@ RUN nodester u -f $IOJS_VERSION
 
 ENV WORKSPACE=/workspace
 
-RUN mkdir $WORKSPACE
-
 VOLUME ["/workspace"]
 
 WORKDIR /workspace
