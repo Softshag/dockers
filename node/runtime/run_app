@@ -16,7 +16,7 @@ if [ -f "$WORKSPACE/.apprc" ]; then
 fi
 
 if [ -z "$PROJECT_DIR" ]; then
- PROJECT_DIR="$WORKSPACE"
+ PROJECT_DIR="$WORKSPACE/code"
 fi
 
 update_source () {
@@ -34,6 +34,7 @@ update_source () {
       echo "# Changing branch: $GIT_REPO_BRANCH" >> $RUN_LOG
       cd $PROJECT_DIR
       git checkout $GIT_REPO_BRANCH >> $RUN_LOG
+      git pull >> $RUNLOG
     fi
 
   else
@@ -63,7 +64,7 @@ bootstrap_app () {
     BINARY="$NPM start"
   fi
   echo "# Running application: $BINARY" | tee -a $RUN_LOG
-  $BINARY
+  exec $BINARY
 }
 
 print_env () {

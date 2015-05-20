@@ -6,6 +6,9 @@ ENV IOJS_VERSION=io@2.0.1
 
 RUN nodester u -f $IOJS_VERSION
 
+ENV WORKSPACE=/workspace
+
+RUN mkdir $WORKSPACE
 
 VOLUME ["/workspace"]
 
