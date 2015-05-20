@@ -30,7 +30,7 @@ update_source () {
     echo "# Cloning source: $GIT_REPO" | tee -a $RUN_LOG
     $GITBIN clone $GIT_REPO $PROJECT_DIR >> $RUN_LOG
 
-    if [ -z "$GIT_REPO_BRANCH" ]; then
+    if [ ! -z "$GIT_REPO_BRANCH" ]; then
       echo "# Changing branch: $GIT_REPO_BRANCH" >> $RUN_LOG
       cd $PROJECT_DIR
       git checkout $GIT_REPO_BRANCH >> $RUN_LOG
