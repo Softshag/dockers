@@ -2,7 +2,6 @@
 
 set -eo pipefail
 
-
 GITBIN=`which git`
 WORKSPACE=/etc/conf
 export ETCD_PORT=${ETCD_PORT:-4001}
@@ -13,7 +12,6 @@ if [ -z "$ETCD_ENDPOINT"]; then
 fi
 
 check_git () {
-
 
   if [ ! -z "$GIT_REPO_KEY" ] && [ -n "$GIT_REPO_KEY" ]; then
     echo "Setting git admin"
@@ -37,11 +35,10 @@ check_git () {
     cd $WORKSPACE
     $GITBIN pull
   fi
+
 }
 
-
-echo "[nginx] booting container. ETCD: $ETCD."
-
+echo "[nginx] booting container. ETCD: $ETCD_ENDPOINT."
 
 if [ ! -z "$GIT_REPO" ]; then
   check_git
