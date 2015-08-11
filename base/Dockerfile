@@ -2,7 +2,7 @@ FROM ubuntu-debootstrap:latest
 
 RUN mkdir /workspace && \
     apt-get update && \
-    apt-get install -y ca-certificates
+    apt-get install -y ca-certificates curl
 
 COPY runtime /usr/bin
 
