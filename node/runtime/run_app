@@ -19,26 +19,31 @@ if [ -z "$PROJECT_DIR" ]; then
  PROJECT_DIR="$WORKSPACE/code"
 fi
 
+_log () {
+  msg=$1
+  echo $msg | tee -a $RUN_LOG
+}
+
 update_source () {
 
   if [ ! -z "$GIT_REPO_KEY" ] && [ -n "$GIT_REPO_KEY" ]; then
-    echo "Setting git admin" | tee -a $RUN_LOG
+    echo "# Setting git admin" | tee -a $RUN_LOG
     git config --global alias.admin \!"/usr/bin/git-as.sh $GIT_REPO_KEY"
   fi
 
   if [ ! -d "$PROJECT_DIR/.git" ]; then
-    echo "# Cloning source: $GIT_REPO" | tee -a $RUN_LOG
+    echo "# Cloning source: '$GIT_REPO'" | tee -a $RUN_LOG
     $GITBIN clone $GIT_REPO $PROJECT_DIR >> $RUN_LOG
 
     if [ ! -z "$GIT_REPO_BRANCH" ]; then
-      echo "# Changing branch: $GIT_REPO_BRANCH" >> $RUN_LOG
+      echo "# Changing branch: '$GIT_REPO_BRANCH'" >> $RUN_LOG
       cd $PROJECT_DIR
       git checkout $GIT_REPO_BRANCH >> $RUN_LOG
       git pull >> $RUNLOG
     fi
 
   else
-    echo "# Updating source: $GIT_REPO" | tee -a $RUN_LOG
+    echo "# Updating source: '$GIT_REPO'" | tee -a $RUN_LOG
     cd $PROJECT_DIR
     $GITBIN pull >/dev/null >> $RUN_LOG
   fi
@@ -49,21 +54,24 @@ update_source () {
 run_npm () {
 
   cd $PROJECT_DIR
+
   if [ "clean" = "$1" ]; then
     echo "# Cleaning" | tee -a $RUN_LOG
     rm -rf node_modules
   fi
+
   echo "# Intalling dependencies" | tee -a $RUN_LOG
   $NPM install --production >> $RUN_LOG
 }
 
-
+# Run application
+# If the the BINARY env variable isnt set, default to `npm start`
 bootstrap_app () {
   cd $PROJECT_DIR
   if [ -z "$BINARY" ]; then
     BINARY="$NPM start"
   fi
-  echo "# Running application: $BINARY" | tee -a $RUN_LOG
+  echo "# Running application: '$BINARY'" | tee -a $RUN_LOG
   exec $BINARY
 }
 

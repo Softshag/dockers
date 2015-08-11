@@ -6,8 +6,6 @@ fi
 
 set -e
 
-
-
 if [ "$1" = "run" ]; then
   shift
   run_app $@
