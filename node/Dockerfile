@@ -1,8 +1,8 @@
-FROM softshag/base:latest
+FROM softshag/base:1.0
 
 RUN apt-get update && apt-get install -y git-core
 
-ENV IOJS_VERSION=io@2.0.1
+ENV IOJS_VERSION=io@3.0.0
 
 RUN nodester u -f $IOJS_VERSION
 
