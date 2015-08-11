@@ -7,8 +7,10 @@ GITBIN=`which git`
 WORKSPACE=/etc/conf
 export ETCD_PORT=${ETCD_PORT:-4001}
 export HOST_IP=${HOST_IP:-172.17.42.1}
-export ETCD=$HOST_IP:$ETCD_PORT
 
+if [ -z "$ETCD_ENDPOINT"]; then
+  export ETCD_ENDPOINT=$HOST_IP:$ETCD_PORT
+fi
 
 check_git () {
 
@@ -47,7 +49,7 @@ fi
 
 # Put a continual polling `confd` process into the background to watch
 # for changes every 10 seconds
-confd -interval 10 -backend etcd -node $ETCD &
+confd -interval 10 -backend etcd -node $ETCD_ENDPOINT &
 echo "[nginx] confd is now monitoring etcd for changes..."
 
 # Start the Nginx service using the generated config
