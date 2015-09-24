@@ -1,8 +1,8 @@
-FROM nginx:1.9
+FROM nginx:1.9.5
 
 RUN apt-get update && apt-get install -y git-core curl
 
-RUN curl -L https://github.com/kelseyhightower/confd/releases/download/v0.9.0/confd-0.9.0-linux-amd64 -o /usr/bin/confd && \
+RUN curl -L https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 -o /usr/bin/confd && \
     chmod a+x /usr/bin/confd && \
     mkdir -p /etc/confd/{conf.d,templates}
 

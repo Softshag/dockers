@@ -44,9 +44,13 @@ if [ ! -z "$GIT_REPO" ]; then
   check_git
 fi
 
-# Put a continual polling `confd` process into the background to watch
-# for changes every 10 seconds
-confd -interval 10 -backend etcd -node $ETCD_ENDPOINT &
+if [ ! -f "/etc/confd/confd.toml" ]; then
+  confd -interval 10 -backend etcd -node $ETCD_ENDPOINT &
+else
+  confd &
+fi
+
+
 echo "[nginx] confd is now monitoring etcd for changes..."
 
 # Start the Nginx service using the generated config
