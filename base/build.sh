@@ -29,7 +29,7 @@ export GOROOT="$BUILDDIR/go"
 export GOPATH="$BUILDDIR/nodester/Godeps/_workspace"
 mkdir -p $BUILDDIR/nodester
 cd $BUILDDIR/nodester
-curl -L# https://github.com/kildevaeld/nodester/archive/master.tar.gz | tar zx --strip 1
+curl -L# https://github.com/kildevaeld/nodester/archive/v0.0.1.tar.gz | tar zx --strip 1
 $GOBIN/go build -o $RUNTIME/nodester *.go
 
 
