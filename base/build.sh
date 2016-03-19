@@ -15,7 +15,7 @@ if [ ! -d "$BUILDDIR/go" ]; then
   mkdir -p $BUILDDIR/go
 
   cd $BUILDDIR/go
-  curl -L# https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar zx --strip 1
+  curl -L# https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz | tar zx --strip 1
 
 fi
 
