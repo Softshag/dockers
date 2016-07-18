@@ -3,7 +3,7 @@
 set -eo pipefail
 
 GITBIN=`which git`
-WORKSPACE=/etc/conf
+WORKSPACE=/etc/confd
 export ETCD_PORT=${ETCD_PORT:-4001}
 export HOST_IP=${HOST_IP:-172.17.42.1}
 
